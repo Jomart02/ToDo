@@ -23,11 +23,13 @@ private slots:
     void on_pushButton_delete_clicked();
 
 private:
+    void LoadTask();
     QString task="";
     QString info="";
     int index =0;
 
     QDateTime datetime ;
+    SettingUpdate *SetUp;
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

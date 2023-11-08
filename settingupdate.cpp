@@ -1,40 +1,37 @@
 #include "settingupdate.h"
 #include <QDebug>
-SettingUpdate::SettingUpdate()
+SettingUpdate::SettingUpdate() :
+sett(new QSettings(QDir::currentPath() + "/config.ini", QSettings::IniFormat))
 {
-
+    sett->setIniCodec("UTF-8");
 }
-void SettingUpdate::Initialization(char *argv[], const size_t n){
+void SettingUpdate::Initialization(){
     QString filename = QDir::currentPath() + "/config.ini";
     QFile file(filename);
-    int i=0;
-    qDebug() << file.exists();
+
     if (!file.exists()){
         file.open(QFile::WriteOnly | QFile::Text);
-
-        QTextStream stream(&file);
-        for(size_t i {}; i < n; i++)
-        {
-            stream << "[" << argv[i] << "]" << endl;
-        }
         file.close();
     }
 
 }
-
-void SettingUpdate::LoadSetting(QString Group, QString Key, QString value){
-
-    QSettings sett(QDir::currentPath() + "/config.ini", QSettings::IniFormat);
-    sett.setIniCodec("UTF-8");
-    sett.beginGroup("CONNECT");
-
-    sett.endGroup();
+QString SettingUpdate::LoadSetting(QString Group, QString Key){
+    QString value;
+    sett->beginGroup(Group);
+    value = sett->value(Key).toString();
+    sett->endGroup();
+    return value;
+}
+void SettingUpdate::RemoveSetting(QString Group){
+    sett->remove(Group);
 }
 
 void SettingUpdate::SaveSetting(QString Group, QString Key, QString value){
-    QSettings sett(QDir::currentPath() + "/config.ini", QSettings::IniFormat);
-    sett.setIniCodec("UTF-8");
-    sett.beginGroup(Group);
-    sett.setValue(Key, value);
-    sett.endGroup();
+    sett->beginGroup(Group);
+    sett->setValue(Key, value);
+    sett->endGroup();
+}
+
+QStringList SettingUpdate::getGroup(){
+    return sett->childGroups();
 }

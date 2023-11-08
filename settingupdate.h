@@ -7,13 +7,19 @@
 #include <QFile>
 
 
+
 class SettingUpdate
 {
 public:
-    static void SaveSetting(QString Group, QString Key, QString value);
-    static void LoadSetting(QString Group, QString Key, QString value);
-    static void Initialization(char *argv[], const size_t n);
+    void SaveSetting(QString Group, QString Key, QString value);
+    void RemoveSetting(QString Group);
+    QStringList getGroup();
+    QString LoadSetting(QString Group, QString Key);
+    void Initialization();
     SettingUpdate();
+
+   private:
+    QSettings *sett;
 };
 
 #endif // SETTINGUPDATE_H
