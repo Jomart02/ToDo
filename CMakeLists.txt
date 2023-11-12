@@ -26,7 +26,7 @@ set(PROJECT_SOURCES
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ToDo
         MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
+        ${PROJECT_SOURCES} ${SOURCES}
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ToDo APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -35,13 +35,13 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 else()
     if(ANDROID)
         add_library(ToDo SHARED
-            ${PROJECT_SOURCES}
+            ${PROJECT_SOURCES} ${SOURCES}
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
         add_executable(ToDo
-            ${PROJECT_SOURCES}
+            ${PROJECT_SOURCES} ${SOURCES}
         )
     endif()
 endif()
@@ -59,3 +59,4 @@ set_target_properties(ToDo PROPERTIES
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ToDo)
 endif()
+

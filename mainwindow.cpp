@@ -4,13 +4,46 @@
 
 MainWindow::MainWindow(QWidget *parent):
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    SetUp(new SettingUpdate() )
+    ui(new Ui::MainWindow)
 {
-    SetUp->Initialization();
-    this->index = 0;
     ui->setupUi(this);
-    this->LoadTask();
+    pwNew = ui->listView_new;
+    pwComplete = ui->listView_complete;
+
+    pwNew->setDragEnabled(true);
+    pwNew->setAcceptDrops(true);
+    pwNew->setDropIndicatorShown(true);
+    pwNew->setDefaultDropAction(Qt::MoveAction);
+
+    pwComplete->setDragEnabled(true);
+    pwComplete->setAcceptDrops(true);
+    pwComplete->setDropIndicatorShown(true);
+    pwComplete->setDefaultDropAction(Qt::MoveAction);
+
+    pwNew->setModel(new QStringListModel());
+    pwComplete->setModel(new QStringListModel());
+
+    pwNew->setStyleSheet("QListView {font-size: 20pt; font-weight: bold;} "
+                          "QListView::item {background-color: #f90b0b; padding: 10%;"
+                          "border: 1px solid #C0392B; }"
+                          );
+
+
+
+    QToolBar* toolBar = new QToolBar(this);
+    addToolBar(toolBar);
+
+    add = new QAction(this);
+    remove = new QAction(this);
+
+    add->setIcon(QIcon("/home/artem/Загрузки/add.png"));
+    remove->setIcon(QIcon("/home/artem/Загрузки/delete.png"));
+
+    connect(add, &QAction::triggered, this, &MainWindow::onAdd);
+    connect(remove, &QAction::triggered, this, &MainWindow::onDelete);
+
+    toolBar->addAction(add);
+    toolBar->addAction(remove);
 }
 
 MainWindow::~MainWindow()
@@ -18,52 +51,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_save_clicked()
-{
-    datetime = QDateTime::currentDateTime();
-    ui->tableWidget_TODO->insertRow(index);
-    ui->tableWidget_TODO->setItem(index,0,new QTableWidgetItem(datetime.toString("yyyy-MM-dd hh:mm:ss")));
-    ui->tableWidget_TODO->setItem(index,1,new QTableWidgetItem(ui->task_line->text()));
-    ui->tableWidget_TODO->setItem(index,2,new QTableWidgetItem(ui->info_line->text()));
+void MainWindow::onAdd(){
+    pwNew->model()->insertRow(pwNew->model()->rowCount());
+    QModelIndex oIndex = pwNew->model()->index( pwNew->model()->rowCount()-1,0);
+    pwNew->edit(oIndex);
+}
+void MainWindow::onDelete(){
 
-    QTableWidgetItem *item = new QTableWidgetItem();
-    item->data(Qt::CheckStateRole);
-    item->setCheckState(Qt::Unchecked);
-    ui->tableWidget_TODO->setItem(index,3,item);
-
-    SetUp->SaveSetting(datetime.toString("hhmmss"),"DATA" , datetime.toString("yyyy-MM-dd hh:mm:ss"));
-    SetUp->SaveSetting(datetime.toString("hhmmss"),"TASK" , ui->task_line->text());
-    SetUp->SaveSetting(datetime.toString("hhmmss"),"INFO" , ui->info_line->text());
-
-    this->index++;
 }
 
-
-void MainWindow::on_pushButton_delete_clicked()
-{
-    QModelIndexList selectedRows = ui->tableWidget_TODO->selectionModel()->selectedRows();
-    while (!selectedRows.empty()) {
-        datetime = QDateTime::fromString( ui->tableWidget_TODO->item(selectedRows[0].row(),0)->text() , "yyyy-MM-dd hh:mm:ss") ;
-        SetUp->RemoveSetting(datetime.toString("hhmmss"));
-
-        ui->tableWidget_TODO->removeRow(selectedRows[0].row());
-        selectedRows = ui->tableWidget_TODO->selectionModel()->selectedRows();
-    }
-    this->index--;
-}
-
-void MainWindow::LoadTask(){
-
-    QStringList group = SetUp->getGroup();
-    for(int i=0 ;i < group.size();i++){
-        ui->tableWidget_TODO->insertRow(i);
-        ui->tableWidget_TODO->setItem(i,0,new QTableWidgetItem(SetUp->LoadSetting(group[i],"DATA")));
-        ui->tableWidget_TODO->setItem(i,1,new QTableWidgetItem(SetUp->LoadSetting(group[i],"TASK")));
-        ui->tableWidget_TODO->setItem(i,2,new QTableWidgetItem(SetUp->LoadSetting(group[i],"INFO")));
-        QTableWidgetItem *item = new QTableWidgetItem();
-        item->data(Qt::CheckStateRole);
-        item->setCheckState(Qt::Unchecked);
-        ui->tableWidget_TODO->setItem(i,3,item);
-
-    }
-}

@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QDateTime>
 #include "settingupdate.h"
+#include <QToolBar>
+#include <QListView>
+#include <QStringListModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,20 +19,14 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-private slots:
-    void on_pushButton_save_clicked();
-
-    void on_pushButton_delete_clicked();
-
+protected slots:
+    void onAdd();
+    void onDelete();
 private:
-    void LoadTask();
-    QString task="";
-    QString info="";
-    int index =0;
-
-    QDateTime datetime ;
-    SettingUpdate *SetUp;
+    QListView *pwNew = nullptr;
+    QListView *pwComplete = nullptr;
+    QAction *add = nullptr;
+    QAction *remove = nullptr;
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H
