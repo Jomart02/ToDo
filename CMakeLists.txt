@@ -10,12 +10,14 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 set(MOC_HDRS
     mainwindow.h
     settingupdate.h
+
 )
 
 set(SRCS ${MOC_HDRS}
     main.cpp
     mainwindow.cpp
     settingupdate.cpp
+
 )
 
 set(UIS

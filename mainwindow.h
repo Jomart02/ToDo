@@ -7,6 +7,7 @@
 #include <QToolBar>
 #include <QListView>
 #include <QStringListModel>
+#include "task.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,6 +28,7 @@ private:
     QListView *pwComplete = nullptr;
     QAction *add = nullptr;
     QAction *remove = nullptr;
+
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

@@ -23,12 +23,17 @@ MainWindow::MainWindow(QWidget *parent):
     pwNew->setModel(new QStringListModel());
     pwComplete->setModel(new QStringListModel());
 
-    pwNew->setStyleSheet("QListView {font-size: 20pt; font-weight: bold;} "
-                          "QListView::item {background-color: #f90b0b; padding: 10%;"
-                          "border: 1px solid #C0392B; }"
+    QFile file(":/new");
+    file.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(file.readAll());
+    qApp->setStyleSheet(styleSheet);
+
+    pwNew->setStyleSheet(styleSheet);
+
+    pwComplete->setStyleSheet("QListView {font-size: 20pt; font-weight: bold;} "
+                          "QListView::item {background-color: #2ecc71; padding: 10%;"
+                          "border: 1px solid #27ae60; }"
                           );
-
-
 
     QToolBar* toolBar = new QToolBar(this);
     addToolBar(toolBar);
@@ -55,8 +60,17 @@ void MainWindow::onAdd(){
     pwNew->model()->insertRow(pwNew->model()->rowCount());
     QModelIndex oIndex = pwNew->model()->index( pwNew->model()->rowCount()-1,0);
     pwNew->edit(oIndex);
+
+
 }
 void MainWindow::onDelete(){
+      QModelIndex oIndex = pwNew->currentIndex();
+      QModelIndex oIndex1 = pwComplete->currentIndex();
 
+      qDebug() <<  pwNew->currentIndex().data().toString();
+      qDebug() <<  pwComplete->currentIndex().data().toString();
+      pwComplete->currentIndex().model()->data(pwComplete->currentIndex()
+//      pwNew->model()->removeRow(oIndex.row());
+//      pwComplete->model()->removeRow(oIndex1.row());
 }
 

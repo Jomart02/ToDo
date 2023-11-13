@@ -1,0 +1,11 @@
+QListView {
+    font-size: 20pt; 
+    font-weight: bold;
+} 
+
+QListView::item {
+    background-color: #f90b0b; 
+    padding: 10%;
+    border: 1px solid #C0392B; 
+}
+                          
